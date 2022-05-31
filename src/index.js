@@ -1,4 +1,5 @@
 import './style.css';
-import init from './init.js';
+import app from './app.js';
+import state from './view.js';
 
-init();
+app(state);
