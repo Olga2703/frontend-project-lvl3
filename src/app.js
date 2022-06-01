@@ -1,9 +1,12 @@
 import 'bootstrap';
-import * as yup from 'yup';
+import onChange from 'on-change';
 import i18n from 'i18next';
 import resources from './locales/index.js';
+import render from './render.js';
 
-export default (state) => {
+import view from './view.js';
+
+export default () => {
   const elements = {
     form: document.querySelector('.rss-form'),
     inputUrl: document.querySelector('#url-input'),
@@ -11,45 +14,47 @@ export default (state) => {
     feedback: document.querySelector('.feedback'),
   };
 
-  yup.setLocale({
-    mixed: {
-      notOneOf: 'form.errorMessages.duplicate_link',
-      required: 'form.errorMessages.field_required',
-    },
-    string: {
-      url: () => ({ key: 'form.errorMessages.not_valid_url' }),
-    },
-  });
-  const getSchema = (arr) => yup.string().url().notOneOf(arr).required();
-
   const i18nInstance = i18n.createInstance();
-  i18nInstance.init({
-    lng: 'ru',
-    debug: true,
-    resources,
-  });
 
-  elements.inputUrl.addEventListener('change', (e) => {
-    const { value } = e.target;
-    state.form.inputValue = value;
-  });
+  const state = onChange(
+    {
+      lng: 'ru',
+      form: {
+        valid: true,
+        feedbackError: null,
+        links: [],
+      },
+    },
+    render(elements, i18nInstance)
+  );
 
-  elements.form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const value = state.form.inputValue;
-    console.log(value);
-    const schema = getSchema(state.form.feeds);
-    schema
-      .validate(value)
-      .catch((error) => {
-        const errors = error.errors.map((err) => i18nInstance.t(err.key));
-        state.form.errors = [...errors];
-        state.form.valid = false;
-        throw new Error(errors);
-      })
-      .then(() => {
-        state.form.valid = true;
-        state.form.feeds.push(value);
-      });
-  });
+  i18nInstance
+    .init({
+      lng: state.lng,
+      debug: true,
+      resources,
+    })
+    .then(view(elements, state, i18nInstance));
+
+  // elements.form.addEventListener('submit', (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData(e.target);
+  //   const value = formData.get('url');
+  //   console.log(value);
+  //   const schema = getSchema(state.form.feeds);
+  //   schema
+  //     .validate(value)
+  //     .catch((error) => {
+  //       const errors = i18nInstance.t(error.errors.map((err) => i18nInstance.t(err.key)));
+  //       console.log(error.errors.map((err) => i18nInstance.t(err.key)));
+  //       state.form.error = errors;
+  //       console.log(`это state.form.error = ${state.form.error}`);
+  //       state.form.valid = false;
+  //       throw new Error(errors);
+  //     })
+  //     .then(() => {
+  //       state.form.valid = true;
+  //       state.form.feeds.push(value);
+  //     });
+  // });
 };

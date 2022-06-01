@@ -1,14 +1,15 @@
-const renderError = (errors, prevErrors) => {
-  const inputUrl = document.querySelector('#url-input');
-  const feedback = document.querySelector('.feedback');
-  inputUrl.classList.add('is-invalid');
-  feedback.textContent = errors;
+const renderError = (elements, errors) => {
+  if (errors === null) {
+    return;
+  }
+  elements.feedback.textContent = errors;
+  elements.inputUrl.classList.add('is-invalid');
 };
 
-export default (path, value, prevValue) => {
+export default (elements, i18n) => (path, value) => {
   switch (path) {
-    case 'form.errors':
-      renderError(value, prevValue);
+    case 'form.feedbackError':
+      renderError(elements, value);
       break;
 
     default:
