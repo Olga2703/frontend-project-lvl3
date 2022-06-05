@@ -35,26 +35,4 @@ export default () => {
       resources,
     })
     .then(view(elements, state, i18nInstance));
-
-  // elements.form.addEventListener('submit', (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData(e.target);
-  //   const value = formData.get('url');
-  //   console.log(value);
-  //   const schema = getSchema(state.form.feeds);
-  //   schema
-  //     .validate(value)
-  //     .catch((error) => {
-  //       const errors = i18nInstance.t(error.errors.map((err) => i18nInstance.t(err.key)));
-  //       console.log(error.errors.map((err) => i18nInstance.t(err.key)));
-  //       state.form.error = errors;
-  //       console.log(`это state.form.error = ${state.form.error}`);
-  //       state.form.valid = false;
-  //       throw new Error(errors);
-  //     })
-  //     .then(() => {
-  //       state.form.valid = true;
-  //       state.form.feeds.push(value);
-  //     });
-  // });
 };
