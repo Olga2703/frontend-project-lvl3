@@ -12,21 +12,24 @@ export default () => {
     inputUrl: document.querySelector('#url-input'),
     submitButton: document.querySelector('input[type="submit"]'),
     feedback: document.querySelector('.feedback'),
+    postContainer: document.querySelector('.posts'),
+    feedContainer: document.querySelector('.feeds'),
   };
 
   const i18nInstance = i18n.createInstance();
 
-  const state = onChange(
-    {
-      lng: 'ru',
-      form: {
-        valid: true,
-        feedbackError: null,
-        links: [],
-      },
+  const state = {
+    lng: 'ru',
+    form: {
+      valid: true,
+      feedback: null,
+      links: [],
     },
-    render(elements, i18nInstance)
-  );
+    posts: [],
+    feeds: [],
+  };
+
+  const watchState = onChange(state, render(elements, i18nInstance));
 
   i18nInstance
     .init({
@@ -34,5 +37,5 @@ export default () => {
       debug: true,
       resources,
     })
-    .then(view(elements, state, i18nInstance));
+    .then(view(elements, watchState, i18nInstance));
 };

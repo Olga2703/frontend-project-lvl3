@@ -6,6 +6,7 @@ export default {
         field_required: 'Здесь пусто',
         not_valid_url: 'Ссылка должна быть валидным URL',
       },
+      successMessages: 'RSS успешно загружен',
     },
   },
 };
