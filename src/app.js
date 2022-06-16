@@ -20,6 +20,7 @@ export default () => {
 
   const state = {
     lng: 'ru',
+    processState: 'filling',
     form: {
       valid: true,
       feedback: null,
@@ -29,7 +30,7 @@ export default () => {
     feeds: [],
   };
 
-  const watchState = onChange(state, render(elements, i18nInstance));
+  const watchState = onChange(state, render(elements, state, i18nInstance));
 
   i18nInstance
     .init({
