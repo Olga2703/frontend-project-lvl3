@@ -10,32 +10,32 @@ const routes = {
 const getRequest = (link) => axios.get(link).then((response) => response.data);
 
 const getFeeds = (state, link) => {
-  getRequest(link).then((data) => {
-    const feedData = getParsePage(data.contents, state);
-    console.log(feedData);
-    const feed = {
-      title: feedData.feedTitle,
-      description: feedData.feedDescription,
-      id: uniqueId(),
-    };
-    const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: feed.id }));
-    state.form.links = [...state.form.links, link];
-    console.log(state.form.links);
-    state.feeds = [...state.feeds, feed];
-    state.posts = [...state.posts, ...posts];
-    state.processState = 'success';
-  }).catch(() => {
-    throw new Error('net error');
-  });
+  const createFlowLink = routes.allOrigins(link);
+  getRequest(createFlowLink)
+    .then((data) => {
+      const feedData = getParsePage(data.contents, state);
+      const feed = {
+        title: feedData.feedTitle,
+        description: feedData.feedDescription,
+        id: uniqueId(),
+      };
+      const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: feed.id }));
+      state.form.links = [...state.form.links, link];
+      state.feeds = [...state.feeds, feed];
+      state.posts = [...state.posts, ...posts];
+      console.log(state.posts);
+      state.processState = 'success';
+    })
+    .catch(() => {
+      throw new Error('net error');
+    });
 };
 
 const runValidate = (state, link, i18n) => {
   state.form.feedback = null;
   validate(link, state.form.links, i18n)
     .then(() => {
-      const createFlowLink = routes.allOrigins(link);
-      console.log(createFlowLink);
-      getFeeds(state, createFlowLink);
+      getFeeds(state, link);
     })
     .catch((err) => {
       state.form.feedback = err.message;

@@ -9,6 +9,7 @@ const renderFeedback = (elements, value) => {
     return;
   }
   clearClassList(elements);
+  elements.inputUrl.select();
 
   elements.feedback.textContent = value;
   elements.feedback.classList.add('text-danger');
@@ -17,40 +18,41 @@ const renderFeedback = (elements, value) => {
 
 const renderPost = (elements, state, i18n) => {
   clearClassList(elements);
+  elements.form.reset();
+  elements.inputUrl.focus();
   elements.feedback.textContent = i18n.t('form.successMessages');
   elements.feedback.classList.add('text-success');
 
   const containerCard = document.createElement('div');
   containerCard.classList.add('card', 'border-0');
-  elements.feedContainer.append(containerCard);
-  console.log(containerCard);
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
-  containerCard.append(cardBody);
 
   const cardbodyTitle = document.createElement('h2');
   cardbodyTitle.classList.add('card-title', 'h4');
   cardbodyTitle.textContent = 'Фиды';
-  cardBody.append(cardbodyTitle);
 
   const ulFeeds = document.createElement('ul');
   ulFeeds.classList.add('list-group', 'border-0', 'rounded-0');
-  elements.feedContainer.append(ulFeeds);
-  const listFeeds = state.feeds
-    .map((feed) => {
-      const elementLi = document.createElement('li');
-      elementLi.classList.add('list-group-item', 'border-0', 'border-end-0');
-      const h3 = document.createElement('h3');
-      h3.classList.add('h6', 'm-0');
-      h3.textContent = feed.title;
-      const p = document.createElement('p');
-      p.classList.add('m-0', 'small', 'text-black-50');
-      p.textContent = feed.description;
-      elementLi.append(h3);
-      elementLi.append(p);
-      return elementLi;
-    })
-    .forEach((element) => ulFeeds.append(element));
+
+  const listFeeds = state.feeds.map((feed) => {
+    const elementLi = document.createElement('li');
+    elementLi.classList.add('list-group-item', 'border-0', 'border-end-0');
+    const h3 = document.createElement('h3');
+    h3.classList.add('h6', 'm-0');
+    h3.textContent = feed.title;
+    const p = document.createElement('p');
+    p.classList.add('m-0', 'small', 'text-black-50');
+    p.textContent = feed.description;
+    elementLi.append(h3);
+    elementLi.append(p);
+    return elementLi;
+  });
+
+  listFeeds.forEach((element) => ulFeeds.append(element));
+  cardBody.append(cardbodyTitle);
+  containerCard.append(cardBody);
+  elements.feedContainer.replaceChildren(containerCard, ulFeeds);
 };
 
 const handlerProcessState = (elements, state, process, i18n) => {
