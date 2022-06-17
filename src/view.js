@@ -7,19 +7,6 @@ const routes = {
   allOrigins: (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${link}`)}`,
 };
 
-const runValidate = (state, link, i18n) => {
-  state.form.feedback = null;
-  validate(link, state.form.links, i18n)
-    .then(() => {
-      const createFlowLink = routes.allOrigins(link);
-      getFeeds(state, createFlowLink);
-    })
-    .catch((err) => {
-      state.form.feedback = err.message;
-      state.form.valid = false;
-    });
-};
-
 const getRequest = (link) => axios.get(link).then((response) => response.data);
 
 const getFeeds = (state, link) => {
@@ -33,11 +20,27 @@ const getFeeds = (state, link) => {
     };
     const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: feed.id }));
     state.form.links = [...state.form.links, link];
+    console.log(state.form.links);
     state.feeds = [...state.feeds, feed];
     state.posts = [...state.posts, ...posts];
-
-    console.log(state);
+    state.processState = 'success';
+  }).catch(() => {
+    throw new Error('net error');
   });
+};
+
+const runValidate = (state, link, i18n) => {
+  state.form.feedback = null;
+  validate(link, state.form.links, i18n)
+    .then(() => {
+      const createFlowLink = routes.allOrigins(link);
+      console.log(createFlowLink);
+      getFeeds(state, createFlowLink);
+    })
+    .catch((err) => {
+      state.form.feedback = err.message;
+      state.form.valid = false;
+    });
 };
 
 const view = (elements, state, i18n) => {

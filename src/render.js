@@ -21,42 +21,43 @@ const renderPost = (elements, state, i18n) => {
   elements.feedback.classList.add('text-success');
 
   const containerCard = document.createElement('div');
-  containerCard.classList.add('card border-0');
-  containerCard.append(elements.feedContainer);
-
+  containerCard.classList.add('card', 'border-0');
+  elements.feedContainer.append(containerCard);
+  console.log(containerCard);
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
-  cardBody.append(containerCard);
+  containerCard.append(cardBody);
 
   const cardbodyTitle = document.createElement('h2');
-  cardbodyTitle.classList.add('card-title h4');
+  cardbodyTitle.classList.add('card-title', 'h4');
   cardbodyTitle.textContent = 'Фиды';
-  cardbodyTitle.append(cardBody);
+  cardBody.append(cardbodyTitle);
 
   const ulFeeds = document.createElement('ul');
-  ulFeeds.classList.add('list-group border-0 rounded-0');
-
+  ulFeeds.classList.add('list-group', 'border-0', 'rounded-0');
+  elements.feedContainer.append(ulFeeds);
   const listFeeds = state.feeds
     .map((feed) => {
       const elementLi = document.createElement('li');
-      elementLi.classList.add('list-group-item border-0 border-end-0');
+      elementLi.classList.add('list-group-item', 'border-0', 'border-end-0');
       const h3 = document.createElement('h3');
-      h3.classList.add('h6 m-0');
+      h3.classList.add('h6', 'm-0');
       h3.textContent = feed.title;
       const p = document.createElement('p');
-      p.classList.add('m-0 small text-black-50');
+      p.classList.add('m-0', 'small', 'text-black-50');
       p.textContent = feed.description;
       elementLi.append(h3);
       elementLi.append(p);
       return elementLi;
     })
-    .forEach((element) => element.append(ulFeeds));
+    .forEach((element) => ulFeeds.append(element));
 };
 
 const handlerProcessState = (elements, state, process, i18n) => {
   switch (process) {
     case 'success':
       renderPost(elements, state, i18n);
+      state.processState = 'filling';
       break;
     case 'parseError':
       throw new Error('parser error');
