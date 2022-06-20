@@ -1,3 +1,5 @@
+import uniqueId from 'lodash/uniqueId.js';
+
 const clearClassList = (elements) => {
   elements.feedback.classList.remove('text-success');
   elements.feedback.classList.remove('text-danger');
@@ -16,7 +18,27 @@ const renderFeedback = (elements, value) => {
   elements.inputUrl.classList.add('is-invalid');
 };
 
-const renderPost = (elements, state, i18n) => {
+const createContainer = (name) => {
+  const containerCard = document.createElement('div');
+  containerCard.classList.add('card', 'border-0');
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const cardbodyTitle = document.createElement('h2');
+  cardbodyTitle.classList.add('card-title', 'h4');
+  cardbodyTitle.textContent = `${name}`;
+
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  return {
+    containerCard,
+    cardBody,
+    cardbodyTitle,
+    ul,
+  };
+};
+
+const renderFeeds = (elements, state, i18n) => {
   clearClassList(elements);
   elements.form.reset();
   elements.inputUrl.focus();
@@ -55,10 +77,44 @@ const renderPost = (elements, state, i18n) => {
   elements.feedContainer.replaceChildren(containerCard, ulFeeds);
 };
 
+const renderPosts = (elements, state) => {
+  const containers = createContainer('Посты');
+  const listPosts = state.posts.map((post) => {
+    const elementLi = document.createElement('li');
+    elementLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+    const elementLink = document.createElement('a');
+    elementLink.classList.add('fw-bold');
+    const id = uniqueId();
+    elementLink.dataset.id = id;
+    elementLink.setAttribute('target', '_blank');
+    elementLink.rel = 'noopener noreferrer';
+    elementLink.href = post.link;
+    elementLink.textContent = post.title;
+
+    const elementBtn = document.createElement('button');
+    elementBtn.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    elementBtn.dataset.id = id;
+    elementBtn.dataset.bsToggle = 'modal';
+    elementBtn.dataset.bsTarget = '#modal';
+    elementBtn.type = 'button';
+    elementBtn.textContent = 'Просмотр';
+
+    elementLi.append(elementLink);
+    elementLi.append(elementBtn);
+    return elementLi;
+  });
+  listPosts.forEach((element) => containers.ul.append(element));
+  containers.cardBody.append(containers.cardbodyTitle);
+  containers.containerCard.append(containers.cardBody);
+  elements.postContainer.replaceChildren(containers.containerCard, containers.ul);
+};
+
 const handlerProcessState = (elements, state, process, i18n) => {
   switch (process) {
     case 'success':
-      renderPost(elements, state, i18n);
+      renderFeeds(elements, state, i18n);
+      renderPosts(elements, state, i18n);
       state.processState = 'filling';
       break;
     case 'parseError':
