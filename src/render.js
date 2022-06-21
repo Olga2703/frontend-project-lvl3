@@ -45,17 +45,7 @@ const renderFeeds = (elements, state, i18n) => {
   elements.feedback.textContent = i18n.t('form.successMessages');
   elements.feedback.classList.add('text-success');
 
-  const containerCard = document.createElement('div');
-  containerCard.classList.add('card', 'border-0');
-  const cardBody = document.createElement('div');
-  cardBody.classList.add('card-body');
-
-  const cardbodyTitle = document.createElement('h2');
-  cardbodyTitle.classList.add('card-title', 'h4');
-  cardbodyTitle.textContent = 'Фиды';
-
-  const ulFeeds = document.createElement('ul');
-  ulFeeds.classList.add('list-group', 'border-0', 'rounded-0');
+  const containers = createContainer('Фиды');
 
   const listFeeds = state.feeds.map((feed) => {
     const elementLi = document.createElement('li');
@@ -71,10 +61,10 @@ const renderFeeds = (elements, state, i18n) => {
     return elementLi;
   });
 
-  listFeeds.forEach((element) => ulFeeds.append(element));
-  cardBody.append(cardbodyTitle);
-  containerCard.append(cardBody);
-  elements.feedContainer.replaceChildren(containerCard, ulFeeds);
+  listFeeds.forEach((element) => containers.ul.append(element));
+  containers.cardBody.append(containers.cardbodyTitle);
+  containers.containerCard.append(containers.cardBody);
+  elements.feedContainer.replaceChildren(containers.containerCard, containers.ul);
 };
 
 const renderPosts = (elements, state) => {
@@ -117,8 +107,8 @@ const handlerProcessState = (elements, state, process, i18n) => {
       renderPosts(elements, state, i18n);
       state.processState = 'filling';
       break;
-    case 'parseError':
-      throw new Error('parser error');
+    case 'error':
+      throw new Error('parser error or net error');
     default:
       throw new Error(`Unknown process state: ${process}`);
   }
@@ -132,7 +122,9 @@ export default (elements, state, i18n) => (path, value) => {
     case 'processState':
       handlerProcessState(elements, state, value, i18n);
       break;
-
+    case 'posts':
+      renderPosts(elements, state, i18n);
+      break;
     default:
       break;
   }

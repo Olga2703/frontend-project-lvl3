@@ -9,7 +9,7 @@ const getParsePage = (page, state) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(page, 'application/xml');
   if (doc.querySelector('parsererror')) {
-    state.processState = 'parseError';
+    state.processState = 'error';
   }
 
   return {

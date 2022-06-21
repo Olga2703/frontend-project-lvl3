@@ -1,5 +1,6 @@
 import axios from 'axios';
 import uniqueId from 'lodash/uniqueId.js';
+import _ from 'lodash';
 import validate from './validate.js';
 import getParsePage from './parser.js';
 
@@ -14,21 +15,41 @@ const getFeeds = (state, link) => {
   getRequest(createFlowLink)
     .then((data) => {
       const feedData = getParsePage(data.contents, state);
+      const id = uniqueId();
+      state.form.links = [...state.form.links, { link, id }];
+
       const feed = {
         title: feedData.feedTitle,
         description: feedData.feedDescription,
-        id: uniqueId(),
+        linkId: id,
       };
-      const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: feed.id }));
-      state.form.links = [...state.form.links, link];
+      const posts = feedData.feedPosts.map((post) => ({ ...post, linkId: id }));
       state.feeds = [...state.feeds, feed];
       state.posts = [...state.posts, ...posts];
-      console.log(state.posts);
       state.processState = 'success';
     })
     .catch(() => {
-      throw new Error('net error');
+      state.processState = 'error';
     });
+};
+
+const updatePosts = (state) => {
+  const promisesPost = state.form.links.map(({ link }) => getRequest(routes.allOrigins(link)));
+  const promise = Promise.all(promisesPost);
+  promise
+    .then((dates) => {
+      dates.forEach((data) => {
+        const contents = getParsePage(data.contents, state);
+        const id = _.find(state.feeds, ['title', contents.feedTitle]).linkId;
+        const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, linkId: id }));
+        state.posts = [...state.posts, ...newPosts];
+      });
+      console.log(state.posts);
+    })
+    .catch(() => {
+      state.processState = 'error';
+    })
+    .finally(() => setTimeout(() => updatePosts(state), 5000));
 };
 
 const runValidate = (state, link, i18n) => {
@@ -51,6 +72,7 @@ const view = (elements, state, i18n) => {
     const value = formData.get('url').trim();
 
     runValidate(state, value, i18n);
+    updatePosts(state);
   });
 };
 
