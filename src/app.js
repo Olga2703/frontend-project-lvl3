@@ -14,6 +14,10 @@ export default () => {
     feedback: document.querySelector('.feedback'),
     postContainer: document.querySelector('.posts'),
     feedContainer: document.querySelector('.feeds'),
+    button: document.querySelector('button[data-bs-toggle="modal"]'),
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    modalBtnLink: document.querySelector('.modal-footer > a'),
   };
 
   const i18nInstance = i18n.createInstance();
@@ -28,6 +32,9 @@ export default () => {
     },
     posts: [],
     feeds: [],
+    stateUI: {
+      viewed: null,
+    },
   };
 
   const watchState = onChange(state, render(elements, state, i18nInstance));
