@@ -44,7 +44,6 @@ const updatePosts = (state) => {
         const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, linkId: id }));
         state.posts = [...state.posts, ...newPosts];
       });
-      console.log(state.posts);
     })
     .catch(() => {
       state.processState = 'error';

@@ -33,7 +33,7 @@ export default () => {
     posts: [],
     feeds: [],
     stateUI: {
-      viewed: null,
+      viewed: [],
     },
   };
 

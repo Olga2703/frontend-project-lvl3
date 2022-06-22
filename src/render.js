@@ -97,15 +97,11 @@ const renderPosts = (elements, state) => {
       elements.modalTitle.textContent = post.title;
       elements.modalBody.textContent = post.description;
       elements.modalBtnLink.href = post.link;
-      state.stateUI.viewed = post.guid;
+      if (state.stateUI.viewed.findIndex((id) => id === post.guid)) {
+        state.stateUI.viewed = [...state.stateUI.viewed, post.guid];
+      }
+      console.log(state.stateUI);
     });
-
-    if (state.stateUI.viewed === null) {
-      elementLink.classList.add('fw-bold');
-    } else {
-      elementLink.classList.remove('fw-bold');
-      elementLink.classList.remove('fw-normal');
-    }
     return elementLi;
   });
   listPosts.forEach((element) => containers.ul.append(element));
