@@ -16,14 +16,14 @@ const getFeeds = (state, link) => {
     .then((data) => {
       const feedData = getParsePage(data.contents, state);
       const id = uniqueId();
-      state.form.links = [...state.form.links, { link, id }];
+      state.form.links = [...state.form.links, link];
 
       const feed = {
         title: feedData.feedTitle,
         description: feedData.feedDescription,
-        linkId: id,
+        id,
       };
-      const posts = feedData.feedPosts.map((post) => ({ ...post, linkId: id }));
+      const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: id }));
       state.feeds = [...state.feeds, feed];
       state.posts = [...state.posts, ...posts];
       state.processState = 'success';
@@ -34,14 +34,14 @@ const getFeeds = (state, link) => {
 };
 
 const updatePosts = (state) => {
-  const promisesPost = state.form.links.map(({ link }) => getRequest(routes.allOrigins(link)));
+  const promisesPost = state.form.links.map((link) => getRequest(routes.allOrigins(link)));
   const promise = Promise.all(promisesPost);
   promise
     .then((dates) => {
       dates.forEach((data) => {
         const contents = getParsePage(data.contents, state);
-        const id = _.find(state.feeds, ['title', contents.feedTitle]).linkId;
-        const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, linkId: id }));
+        const feedId = _.find(state.feeds, ['title', contents.feedTitle]).id;
+        const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, feedId }));
         state.posts = [...state.posts, ...newPosts];
       });
     })
