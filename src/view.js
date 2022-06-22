@@ -30,6 +30,7 @@ const getFeeds = (state, link) => {
     })
     .catch(() => {
       state.processState = 'error';
+      state.form.feedback = 'form.netErrors';
     });
 };
 

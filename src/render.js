@@ -130,7 +130,7 @@ const handlerProcessState = (elements, state, process, i18n) => {
       state.processState = 'filling';
       break;
     case 'error':
-      throw new Error('parser error or net error');
+      throw new Error(i18n.t('form.notValidRss'));
     default:
       throw new Error(`Unknown process state: ${process}`);
   }
