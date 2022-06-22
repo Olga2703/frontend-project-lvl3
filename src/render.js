@@ -6,6 +6,11 @@ const clearClassList = (elements) => {
   elements.inputUrl.classList.remove('is-invalid');
 };
 
+const changeClasses = (element, [...oldClasses], [...newClasses]) => {
+  oldClasses.forEach((oldClass) => element.classList.remove(oldClass));
+  newClasses.forEach((newClass) => element.classList.add(newClass));
+};
+
 const renderFeedback = (elements, value) => {
   if (value === null) {
     return;
@@ -97,13 +102,20 @@ const renderPosts = (elements, state) => {
       elements.modalTitle.textContent = post.title;
       elements.modalBody.textContent = post.description;
       elements.modalBtnLink.href = post.link;
-      if (state.stateUI.viewed.findIndex((id) => id === post.guid)) {
-        state.stateUI.viewed = [...state.stateUI.viewed, post.guid];
+      if (state.stateUI.viewed === null) {
+        state.stateUI.viewed = new Set(state.stateUI.viewed);
       }
-      console.log(state.stateUI);
+      state.stateUI.viewed.add(post.guid);
+      if (state.stateUI.viewed.has(post.guid)) {
+        changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
+      }
     });
+    if (state.stateUI.viewed !== null && state.stateUI.viewed.has(post.guid)) {
+      changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
+    }
     return elementLi;
   });
+
   listPosts.forEach((element) => containers.ul.append(element));
   containers.cardBody.append(containers.cardbodyTitle);
   containers.containerCard.append(containers.cardBody);
