@@ -8,8 +8,10 @@ const getParsePage = (page, state) => {
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(page, 'application/xml');
+  state.form.feedback = null;
   if (doc.querySelector('parsererror')) {
     state.processState = 'error';
+    state.form.feedback = 'form.notValidRss';
   }
 
   return {

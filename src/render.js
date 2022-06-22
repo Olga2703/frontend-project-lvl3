@@ -11,14 +11,14 @@ const changeClasses = (element, [...oldClasses], [...newClasses]) => {
   newClasses.forEach((newClass) => element.classList.add(newClass));
 };
 
-const renderFeedback = (elements, value) => {
+const renderFeedback = (elements, value, i18n) => {
   if (value === null) {
     return;
   }
   clearClassList(elements);
   elements.inputUrl.select();
 
-  elements.feedback.textContent = value;
+  elements.feedback.textContent = i18n.t(value);
   elements.feedback.classList.add('text-danger');
   elements.inputUrl.classList.add('is-invalid');
 };
@@ -139,7 +139,7 @@ const handlerProcessState = (elements, state, process, i18n) => {
 export default (elements, state, i18n) => (path, value) => {
   switch (path) {
     case 'form.feedback':
-      renderFeedback(elements, value);
+      renderFeedback(elements, value, i18n);
       break;
     case 'processState':
       handlerProcessState(elements, state, value, i18n);
