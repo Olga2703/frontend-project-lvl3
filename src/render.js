@@ -17,6 +17,7 @@ const renderFeedback = (elements, value, i18n) => {
   }
   clearClassList(elements);
   elements.inputUrl.select();
+  console.log(i18n.t(value));
 
   elements.feedback.textContent = i18n.t(value);
   elements.feedback.classList.add('text-danger');

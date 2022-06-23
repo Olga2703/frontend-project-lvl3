@@ -1,4 +1,5 @@
 const getParsePage = (page, state) => {
+  state.form.feedback = null;
   const getPostInfo = (post) => ({
     title: post.querySelector('title').textContent,
     guid: post.querySelector('guid').textContent,
@@ -10,8 +11,8 @@ const getParsePage = (page, state) => {
   const doc = parser.parseFromString(page, 'application/xml');
   state.form.feedback = null;
   if (doc.querySelector('parsererror')) {
-    state.processState = 'error';
     state.form.feedback = 'form.notValidRss';
+    throw new Error('form.notValidRss');
   }
 
   return {
