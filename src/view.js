@@ -13,6 +13,11 @@ const getRequest = (link) => axios.get(link).then((response) => response.data);
 const getFeeds = (state, link) => {
   const createFlowLink = routes.allOrigins(link);
   getRequest(createFlowLink)
+    .catch(() => {
+      state.processState = 'error';
+      state.form.feedback = 'form.netErrors';
+      throw new Error('form.netErrors');
+    })
     .then((data) => {
       const feedData = getParsePage(data.contents, state);
       const id = uniqueId();
@@ -31,6 +36,7 @@ const getFeeds = (state, link) => {
     .catch(() => {
       state.processState = 'error';
       state.form.feedback = 'form.netErrors';
+      throw new Error('form.netErrors');
     });
 };
 
