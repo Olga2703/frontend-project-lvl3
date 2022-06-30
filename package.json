@@ -19,6 +19,8 @@
     "postcss": "^8.4.14",
     "postcss-loader": "^7.0.0",
     "postcss-preset-env": "^7.6.0",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.72.1",
@@ -44,10 +46,7 @@
     "bootstrap": "^5.2.0-beta1",
     "i18next": "^21.8.4",
     "lodash": "^4.17.21",
-    "npm-check-updates": "^13.0.3",
     "on-change": "^4.0.1",
-    "sass": "^1.52.1",
-    "sass-loader": "^13.0.0",
     "yup": "^0.32.11"
   }
 }

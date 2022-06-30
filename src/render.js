@@ -111,9 +111,20 @@ const renderPosts = (elements, state) => {
         changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
       }
     });
+
+    elementLink.addEventListener('click', () => {
+      if (state.stateUI.viewed === null) {
+        state.stateUI.viewed = new Set(state.stateUI.viewed);
+      }
+      state.stateUI.viewed.add(post.guid);
+      if (state.stateUI.viewed.has(post.guid)) {
+        changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
+      }
+    });
     if (state.stateUI.viewed !== null && state.stateUI.viewed.has(post.guid)) {
       changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
     }
+
     return elementLi;
   });
 

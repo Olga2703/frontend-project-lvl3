@@ -39,7 +39,7 @@ export default () => {
 
   const watchState = onChange(state, render(elements, state, i18nInstance));
 
-  i18nInstance
+  return i18nInstance
     .init({
       lng: state.lng,
       debug: true,
