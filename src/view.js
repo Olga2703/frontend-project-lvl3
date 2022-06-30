@@ -14,7 +14,6 @@ const getFeeds = (state, link) => {
   const createFlowLink = routes.allOrigins(link);
   getRequest(createFlowLink)
     .catch(() => {
-      state.processState = 'error';
       state.form.feedback = 'form.netErrors';
       throw new Error('form.netErrors');
     })
