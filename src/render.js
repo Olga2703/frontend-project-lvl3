@@ -17,7 +17,6 @@ const renderFeedback = (elements, value, i18n) => {
   }
   clearClassList(elements);
   elements.inputUrl.select();
-  console.log(i18n.t(value));
 
   elements.feedback.textContent = i18n.t(value);
   elements.feedback.classList.add('text-danger');
@@ -73,7 +72,7 @@ const renderFeeds = (elements, state, i18n) => {
   elements.feedContainer.replaceChildren(containers.containerCard, containers.ul);
 };
 
-const renderPosts = (elements, state) => {
+const renderPosts = (elements, state, i18n) => {
   const containers = createContainer('Посты');
   const listPosts = state.posts.map((post) => {
     const elementLi = document.createElement('li');
@@ -94,7 +93,7 @@ const renderPosts = (elements, state) => {
     elementBtn.dataset.bsToggle = 'modal';
     elementBtn.dataset.bsTarget = '#modal';
     elementBtn.type = 'button';
-    elementBtn.textContent = 'Просмотр';
+    elementBtn.textContent = i18n.t('button.view');
 
     elementLi.append(elementLink);
     elementLi.append(elementBtn);
@@ -141,8 +140,6 @@ const handlerProcessState = (elements, state, process, i18n) => {
       renderPosts(elements, state, i18n);
       state.processState = 'filling';
       break;
-    case 'error':
-      throw new Error(i18n.t('form.notValidRss'));
     default:
       throw new Error(`Unknown process state: ${process}`);
   }

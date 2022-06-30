@@ -34,9 +34,8 @@ const getFeeds = (state, link) => {
       state.processState = 'success';
     })
     .catch(() => {
-      state.processState = 'error';
-      state.form.feedback = 'form.netErrors';
-      throw new Error('form.netErrors');
+      state.form.feedback = 'form.notValidRss';
+      throw new Error('form.notValidRss');
     });
 };
 
@@ -53,7 +52,8 @@ const updatePosts = (state) => {
       });
     })
     .catch(() => {
-      state.processState = 'error';
+      state.form.feedback = 'form.netErrors';
+      throw new Error('form.netErrors');
     })
     .finally(() => setTimeout(() => updatePosts(state), 5000));
 };
