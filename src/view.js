@@ -33,10 +33,6 @@ const getFeeds = (state, link) => {
       state.posts = [...state.posts, ...posts];
       state.processState = 'success';
     });
-    // .catch(() => {
-    //   state.form.feedback = 'form.notValidRss';
-    //   throw new Error('form.notValidRss');
-    // });
 };
 
 const updatePosts = (state) => {
@@ -51,10 +47,6 @@ const updatePosts = (state) => {
         state.posts = [...state.posts, ...newPosts];
       });
     })
-    // .catch(() => {
-    //   state.form.feedback = 'form.netErrors';
-    //   throw new Error('form.netErrors');
-    // })
     .finally(() => setTimeout(() => updatePosts(state), 5000));
 };
 
