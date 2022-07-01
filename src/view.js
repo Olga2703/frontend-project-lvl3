@@ -11,6 +11,7 @@ const routes = {
 const getRequest = (link) => axios.get(link).then((response) => response.data);
 
 const getFeeds = (state, link) => {
+  state.form.feedback = null;
   const createFlowLink = routes.allOrigins(link);
   getRequest(createFlowLink)
     .catch(() => {
@@ -31,11 +32,11 @@ const getFeeds = (state, link) => {
       state.feeds = [...state.feeds, feed];
       state.posts = [...state.posts, ...posts];
       state.processState = 'success';
-    })
-    .catch(() => {
-      state.form.feedback = 'form.notValidRss';
-      throw new Error('form.notValidRss');
     });
+    // .catch(() => {
+    //   state.form.feedback = 'form.notValidRss';
+    //   throw new Error('form.notValidRss');
+    // });
 };
 
 const updatePosts = (state) => {
@@ -50,10 +51,10 @@ const updatePosts = (state) => {
         state.posts = [...state.posts, ...newPosts];
       });
     })
-    .catch(() => {
-      state.form.feedback = 'form.netErrors';
-      throw new Error('form.netErrors');
-    })
+    // .catch(() => {
+    //   state.form.feedback = 'form.netErrors';
+    //   throw new Error('form.netErrors');
+    // })
     .finally(() => setTimeout(() => updatePosts(state), 5000));
 };
 
