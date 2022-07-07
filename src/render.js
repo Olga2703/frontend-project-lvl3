@@ -11,7 +11,7 @@ const changeClasses = (element, [...oldClasses], [...newClasses]) => {
   newClasses.forEach((newClass) => element.classList.add(newClass));
 };
 
-const renderFeedback = (elements, value, i18n) => {
+const renderError = (elements, value, i18n) => {
   if (value === null) {
     return;
   }
@@ -102,25 +102,25 @@ const renderPosts = (elements, state, i18n) => {
       elements.modalTitle.textContent = post.title;
       elements.modalBody.textContent = post.description;
       elements.modalBtnLink.href = post.link;
-      if (state.stateUI.viewed === null) {
-        state.stateUI.viewed = new Set(state.stateUI.viewed);
+      if (state.stateUI.seenPosts === null) {
+        state.stateUI.seenPosts = new Set(state.stateUI.seenPosts);
       }
-      state.stateUI.viewed.add(post.guid);
-      if (state.stateUI.viewed.has(post.guid)) {
+      state.stateUI.seenPosts.add(post.guid);
+      if (state.stateUI.seenPosts.has(post.guid)) {
         changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
       }
     });
 
     elementLink.addEventListener('click', () => {
-      if (state.stateUI.viewed === null) {
-        state.stateUI.viewed = new Set(state.stateUI.viewed);
+      if (state.stateUI.seenPosts === null) {
+        state.stateUI.seenPosts = new Set(state.stateUI.seenPosts);
       }
-      state.stateUI.viewed.add(post.guid);
-      if (state.stateUI.viewed.has(post.guid)) {
+      state.stateUI.seenPosts.add(post.guid);
+      if (state.stateUI.seenPosts.has(post.guid)) {
         changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
       }
     });
-    if (state.stateUI.viewed !== null && state.stateUI.viewed.has(post.guid)) {
+    if (state.stateUI.seenPosts !== null && state.stateUI.seenPosts.has(post.guid)) {
       changeClasses(elementLink, ['fw-bold'], ['fw-normal', 'link-secondary']);
     }
 
@@ -147,8 +147,8 @@ const handlerProcessState = (elements, state, process, i18n) => {
 
 export default (elements, state, i18n) => (path, value) => {
   switch (path) {
-    case 'form.feedback':
-      renderFeedback(elements, value, i18n);
+    case 'form.error':
+      renderError(elements, value, i18n);
       break;
     case 'processState':
       handlerProcessState(elements, state, value, i18n);

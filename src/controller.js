@@ -8,20 +8,19 @@ const routes = {
   allOrigins: (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${link}`)}`,
 };
 
-const getRequest = (link) => axios.get(link).then((response) => response.data);
-
 const getFeeds = (state, link) => {
-  state.form.feedback = null;
+  state.form.error = null;
   const createFlowLink = routes.allOrigins(link);
-  getRequest(createFlowLink)
+  axios
+    .get(createFlowLink)
     .catch(() => {
-      state.form.feedback = 'form.netErrors';
+      state.form.error = 'form.netErrors';
       throw new Error('form.netErrors');
     })
-    .then((data) => {
-      const feedData = getParsePage(data.contents, state);
+    .then((response) => {
+      const feedData = getParsePage(response.data.contents, state);
       const id = uniqueId();
-      state.form.links = [...state.form.links, link];
+      state.links = [...state.links, link];
 
       const feed = {
         title: feedData.feedTitle,
@@ -36,12 +35,11 @@ const getFeeds = (state, link) => {
 };
 
 const updatePosts = (state) => {
-  const promisesPost = state.form.links.map((link) => getRequest(routes.allOrigins(link)));
-  const promise = Promise.all(promisesPost);
-  promise
+  const promisesPost = state.links.map((link) => axios.get(routes.allOrigins(link)));
+  Promise.all(promisesPost)
     .then((dates) => {
-      dates.forEach((data) => {
-        const contents = getParsePage(data.contents, state);
+      dates.forEach((response) => {
+        const contents = getParsePage(response.data.contents, state);
         const feedId = _.find(state.feeds, ['title', contents.feedTitle]).id;
         const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, feedId }));
         state.posts = [...state.posts, ...newPosts];
@@ -50,28 +48,38 @@ const updatePosts = (state) => {
     .finally(() => setTimeout(() => updatePosts(state), 5000));
 };
 
-const runValidate = (state, link, i18n) => {
-  state.form.feedback = null;
-  validate(link, state.form.links, i18n)
-    .then(() => {
-      getFeeds(state, link);
-    })
-    .catch((err) => {
-      state.form.feedback = err.message;
-      state.form.valid = false;
-    });
-};
+// const runValidate = (state, link, i18n) => {
+//   state.form.status = null;
+//   state.form.error = null;
+//   validate(link, state.links, i18n)
+//     .then(() => {
+//       getFeeds(state, link);
+//     })
+//     .catch((err) => {
+//       state.form.error = err.message;
+//     });
+// };
 
-const view = (elements, state, i18n) => {
+const handleView = (elements, state, i18n) => {
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const formData = new FormData(e.target);
     const value = formData.get('url').trim();
 
-    runValidate(state, value, i18n);
+    // runValidate(state, value, i18n);
+    state.form.error = null;
+    validate(value, state.links)
+      .catch((err) => {
+        state.form.error = i18n.t(err.message);
+        throw new Error(err);
+      })
+      .then(() => {
+        getFeeds(state, value);
+      });
+
     updatePosts(state);
   });
 };
 
-export default view;
+export default handleView;

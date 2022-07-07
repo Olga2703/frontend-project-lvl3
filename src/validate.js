@@ -10,13 +10,16 @@ yup.setLocale({
   },
 });
 
-const validate = (link, links, i18n) => {
+const validate = (link, links) => {
   const schema = yup.string().url().notOneOf(links).required();
   return schema
     .validate(link)
     .then(() => null)
     .catch((err) => {
-      throw new Error(i18n.t(err.errors[0]));
+      // throw new Error(i18n.t(err.errors[0]));
+      throw new Error(err.errors[0]);
+      // console.log(err.errors[0]);
+      // return err.errors[0];
     });
 };
 

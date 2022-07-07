@@ -4,7 +4,7 @@ import i18n from 'i18next';
 import resources from './locales/index.js';
 import render from './render.js';
 
-import view from './view.js';
+import handleView from './controller.js';
 
 export default () => {
   const elements = {
@@ -23,17 +23,17 @@ export default () => {
   const i18nInstance = i18n.createInstance();
 
   const state = {
-    lng: 'ru',
     processState: 'filling',
     form: {
-      valid: true,
-      feedback: null,
-      links: [],
+      // valid: true,
+      status: null,
+      error: null,
     },
+    links: [],
     posts: [],
     feeds: [],
     stateUI: {
-      viewed: null,
+      seenPosts: null,
     },
   };
 
@@ -41,9 +41,9 @@ export default () => {
 
   return i18nInstance
     .init({
-      lng: state.lng,
+      lng: 'ru',
       debug: true,
       resources,
     })
-    .then(view(elements, watchState, i18nInstance));
+    .then(handleView(elements, watchState, i18nInstance));
 };
