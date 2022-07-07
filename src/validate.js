@@ -16,10 +16,7 @@ const validate = (link, links) => {
     .validate(link)
     .then(() => null)
     .catch((err) => {
-      // throw new Error(i18n.t(err.errors[0]));
       throw new Error(err.errors[0]);
-      // console.log(err.errors[0]);
-      // return err.errors[0];
     });
 };
 
