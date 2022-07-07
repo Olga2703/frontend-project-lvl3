@@ -5,14 +5,15 @@
 RSS is a specialized format designed to describe news feeds, announcements of articles and other materials. This is the easiest way for websites (usually blogs) to enable users to subscribe to changes. For this purpose, special services called RSS aggregators are used. These services are able to poll RSS feeds of sites for the presence of new posts and show them in a convenient way, noting what they read and so on.
 
 ## Setup
- 
+
 ```
 make install
-```   
+```
+
 ## Run
 
 ```
 make develop
 ```
 
- ## :rocket: [Deploy](https://lvl3-fd3l1avvr-olga2703.vercel.app/)
+## :rocket: [Deploy](https://lvl3-nd6rm8ijg-olga2703.vercel.app/)
