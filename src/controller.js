@@ -5,9 +5,13 @@ import validate from './validate.js';
 import getParsePage from './parser.js';
 
 const routes = {
-  addProxy: (link) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(`${link}`)}`,
+  addProxy: (link) => {
+    const proxyLink = new URL('/get', 'https://allorigins.hexlet.app');
+    proxyLink.searchParams.set('disableCache', true);
+    proxyLink.searchParams.set('url', link);
+    return proxyLink.href;
+  },
 };
-
 const getFeeds = (state, link, i18n) => {
   state.form.error = null;
   const createFlowLink = routes.addProxy(link);
