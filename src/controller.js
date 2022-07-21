@@ -46,10 +46,10 @@ const getFeeds = (state, link, i18n) => {
 const updatePosts = (state, i18n) => {
   const promisesPost = state.links.map((link) => axios.get(routes.addProxy(link)));
   Promise.all(promisesPost)
-    .then((dates) => {
-      dates.forEach((response) => {
+    .then((response) => {
+      response.forEach((posts) => {
         try {
-          const contents = getParsePage(response.data.contents);
+          const contents = getParsePage(posts.data.contents);
           const feedId = _.find(state.feeds, ['title', contents.feedTitle]).id;
           const newPosts = _.differenceBy(contents.feedPosts, state.posts, 'guid').map((post) => ({ ...post, feedId }));
           state.posts = [...state.posts, ...newPosts];

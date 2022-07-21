@@ -16,7 +16,8 @@ const validate = (link, links) => {
     .validate(link)
     .then(() => null)
     .catch((err) => {
-      throw new Error(err.errors[0]);
+      const [validateError] = err.errors;
+      throw new Error(validateError);
     });
 };
 
