@@ -25,7 +25,6 @@ export default () => {
   const state = {
     processState: 'filling',
     form: {
-      // valid: true,
       status: null,
       error: null,
     },

@@ -12,6 +12,7 @@ const routes = {
     return proxyLink.href;
   },
 };
+
 const getFeeds = (state, link, i18n) => {
   state.form.error = null;
   const createFlowLink = routes.addProxy(link);
