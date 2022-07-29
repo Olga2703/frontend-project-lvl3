@@ -13,7 +13,7 @@ const changeClasses = (element, [...oldClasses], [...newClasses]) => {
 
 const clearForm = (elements) => {
   elements.feedback.textContent = '';
-  elements.form.reset();
+  // elements.form.reset();
 };
 
 const renderError = (elements, value, i18n) => {
@@ -50,7 +50,7 @@ const createContainer = (name) => {
 
 const renderFeeds = (elements, state, i18n) => {
   clearClassList(elements);
-  // elements.form.reset();
+  elements.form.reset();
   elements.inputUrl.focus();
   elements.feedback.textContent = i18n.t('form.successMessages');
   elements.feedback.classList.add('text-success');
