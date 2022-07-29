@@ -16,4 +16,4 @@ make install
 make develop
 ```
 
-## :rocket: [Deploy](https://lvl3-6wunur3sr-olga2703.vercel.app/)
+## :rocket: [Deploy](https://lvl3-378iind7e-olga2703.vercel.app/)

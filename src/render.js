@@ -13,7 +13,6 @@ const changeClasses = (element, [...oldClasses], [...newClasses]) => {
 
 const clearForm = (elements) => {
   elements.feedback.textContent = '';
-  // elements.form.reset();
 };
 
 const renderError = (elements, value, i18n) => {
