@@ -15,6 +15,7 @@ const routes = {
 
 const getFeeds = (state, link, i18n) => {
   state.form.error = null;
+  state.processState = 'filling';
   const createFlowLink = routes.addProxy(link);
   axios
     .get(createFlowLink)

@@ -11,6 +11,11 @@ const changeClasses = (element, [...oldClasses], [...newClasses]) => {
   newClasses.forEach((newClass) => element.classList.add(newClass));
 };
 
+const clearForm = (elements) => {
+  elements.feedback.textContent = '';
+  elements.form.reset();
+};
+
 const renderError = (elements, value, i18n) => {
   if (value === null) {
     return;
@@ -45,7 +50,7 @@ const createContainer = (name) => {
 
 const renderFeeds = (elements, state, i18n) => {
   clearClassList(elements);
-  elements.form.reset();
+  // elements.form.reset();
   elements.inputUrl.focus();
   elements.feedback.textContent = i18n.t('form.successMessages');
   elements.feedback.classList.add('text-success');
@@ -76,7 +81,14 @@ const renderPosts = (elements, state, i18n) => {
   const containers = createContainer('Посты');
   const listPosts = state.posts.map((post) => {
     const elementLi = document.createElement('li');
-    elementLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    elementLi.classList.add(
+      'list-group-item',
+      'd-flex',
+      'justify-content-between',
+      'align-items-start',
+      'border-0',
+      'border-end-0',
+    );
 
     const elementLink = document.createElement('a');
     elementLink.classList.add('fw-bold');
@@ -138,7 +150,9 @@ const handlerProcessState = (elements, state, process, i18n) => {
     case 'success':
       renderFeeds(elements, state, i18n);
       renderPosts(elements, state, i18n);
-      state.processState = 'filling';
+      break;
+    case 'filling':
+      clearForm(elements);
       break;
     default:
       throw new Error(`Unknown process state: ${process}`);
