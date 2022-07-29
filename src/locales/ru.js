@@ -8,7 +8,7 @@ export default {
       },
       successMessages: 'RSS успешно загружен',
       notValidRss: 'Ресурс не содержит валидный RSS',
-      netErrors: 'Ошибка сети',
+      ERR_NETWORK: 'Ошибка сети',
     },
     button: {
       view: 'Просмотр',

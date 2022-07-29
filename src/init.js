@@ -1,6 +1,7 @@
 import 'bootstrap';
 import onChange from 'on-change';
 import i18n from 'i18next';
+import * as yup from 'yup';
 import resources from './locales/index.js';
 import render from './render.js';
 
@@ -21,6 +22,16 @@ export default () => {
   };
 
   const i18nInstance = i18n.createInstance();
+
+  yup.setLocale({
+    mixed: {
+      notOneOf: 'form.errorMessages.duplicate_link',
+      required: 'form.errorMessages.field_required',
+    },
+    string: {
+      url: 'form.errorMessages.not_valid_url',
+    },
+  });
 
   const state = {
     processState: 'filling',

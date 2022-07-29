@@ -18,26 +18,26 @@ const getFeeds = (state, link, i18n) => {
   const createFlowLink = routes.addProxy(link);
   axios
     .get(createFlowLink)
-    .catch(() => {
-      state.form.error = 'form.netErrors';
-      throw new Error('form.netErrors');
-    })
     .then((response) => {
-      try {
-        const feedData = getParsePage(response.data.contents);
-        const id = uniqueId();
-        state.links = [...state.links, link];
+      const feedData = getParsePage(response.data.contents);
+      const id = uniqueId();
+      state.links = [...state.links, link];
 
-        const feed = {
-          title: feedData.feedTitle,
-          description: feedData.feedDescription,
-          id,
-        };
-        const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: id }));
-        state.feeds = [...state.feeds, feed];
-        state.posts = [...state.posts, ...posts];
-        state.processState = 'success';
-      } catch (err) {
+      const feed = {
+        title: feedData.feedTitle,
+        description: feedData.feedDescription,
+        id,
+      };
+      const posts = feedData.feedPosts.map((post) => ({ ...post, feedId: id }));
+      state.feeds = [...state.feeds, feed];
+      state.posts = [...state.posts, ...posts];
+      state.processState = 'success';
+    })
+    .catch((err) => {
+      if (err.code === 'ERR_NETWORK') {
+        state.form.error = 'form.ERR_NETWORK';
+        throw new Error('form.ERR_NETWORK');
+      } else {
         state.form.error = i18n.t(err.message);
         throw new Error(err);
       }
